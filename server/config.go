@@ -5,8 +5,14 @@ import (
 	"os"
 )
 
+type EnvConfig struct {
+	notionApiKey string
+	notionDbId   string
+}
+
 func getEnvConfig() EnvConfig {
 	return EnvConfig{
 		notionApiKey: os.Getenv("NOTION_API_KEY"),
+		notionDbId:   os.Getenv("NOTION_DB_ID"),
 	}
 }

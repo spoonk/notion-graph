@@ -10,12 +10,12 @@ import (
 	"time"
 )
 
-type EnvConfig struct {
-	notionApiKey string
-}
-
 func welcome(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Welcome to my website!")
+}
+
+func database(w http.ResponseWriter, r *http.Request) {
+	doSomething()
 }
 
 // middleware pattern:
@@ -30,13 +30,18 @@ func logging(f http.HandlerFunc) http.HandlerFunc {
 }
 
 func main() {
+
 	initLogging()
+
 	slog.Info(getEnvConfig().notionApiKey)
 
 	slog.Info("Starting server on port 8080")
 	http.HandleFunc("/", logging(welcome))
+	http.HandleFunc("/database", logging(database))
+	doSomething()
 
-	http.ListenAndServe(":8080", nil)
+	// http.ListenAndServe(":8080", nil)
+
 }
 
 func initLogging() {
