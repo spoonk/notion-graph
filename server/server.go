@@ -2,12 +2,17 @@ package main
 
 import (
 	"fmt"
+	_ "github.com/joho/godotenv/autoload" // underscore means import solely for side effects
 	"github.com/lmittmann/tint"
 	"log/slog"
 	"net/http"
 	"os"
 	"time"
 )
+
+type EnvConfig struct {
+	notionApiKey string
+}
 
 func welcome(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Welcome to my website!")
@@ -26,6 +31,7 @@ func logging(f http.HandlerFunc) http.HandlerFunc {
 
 func main() {
 	initLogging()
+	slog.Info(getEnvConfig().notionApiKey)
 
 	slog.Info("Starting server on port 8080")
 	http.HandleFunc("/", logging(welcome))
