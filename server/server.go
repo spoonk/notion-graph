@@ -38,9 +38,23 @@ func main() {
 	slog.Info("Starting server on port 8080")
 	http.HandleFunc("/", logging(welcome))
 	http.HandleFunc("/database", logging(database))
-	doSomething()
+	// getPagesFromDB(getEnvConfig().notionDbId)
+	getAllPagesAsNotionNotes()
 
-	http.ListenAndServe(":8080", nil)
+	// http.ListenAndServe(":8080", nil)
+}
+
+func getAllPagesAsNotionNotes() {
+	pages := getPagesFromDB(getEnvConfig().notionDbId)
+
+	notionNotes := []NotionNote{}
+
+	for _, page := range pages {
+		notionNotes = append(notionNotes, parsePageToNotionNote(page))
+	}
+
+	slog.Info(getJSON(notionNotes))
+
 }
 
 func initLogging() {
