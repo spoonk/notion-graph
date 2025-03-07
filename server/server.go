@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
-	_ "github.com/joho/godotenv/autoload" // underscore means import solely for side effects
-	"github.com/lmittmann/tint"
 	"log/slog"
 	"net/http"
 	"os"
 	"time"
+
+	_ "github.com/joho/godotenv/autoload" // underscore means import solely for side effects
+	"github.com/lmittmann/tint"
 )
 
 func welcome(w http.ResponseWriter, r *http.Request) {
@@ -30,7 +31,6 @@ func logging(f http.HandlerFunc) http.HandlerFunc {
 }
 
 func main() {
-
 	initLogging()
 
 	slog.Info(getEnvConfig().notionApiKey)
@@ -40,8 +40,7 @@ func main() {
 	http.HandleFunc("/database", logging(database))
 	doSomething()
 
-	// http.ListenAndServe(":8080", nil)
-
+	http.ListenAndServe(":8080", nil)
 }
 
 func initLogging() {
