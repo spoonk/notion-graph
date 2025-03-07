@@ -9,9 +9,9 @@ import (
 )
 
 type NotionNote struct {
-	ID         string `json:"ID"`
-	Title      string
-	RelatedIds []string
+	ID         string   `json:"id"`
+	Title      string   `json:"title"`
+	RelatedIds []string `json:"relatedIds"`
 }
 
 func doSomething() {
