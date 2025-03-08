@@ -3,22 +3,14 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	_ "github.com/joho/godotenv/autoload" // underscore means import solely for side effects
+	"github.com/lmittmann/tint"
 	"log/slog"
 	"net/http"
 	"os"
 	"time"
-
-	_ "github.com/joho/godotenv/autoload" // underscore means import solely for side effects
-	"github.com/lmittmann/tint"
 )
 
-func welcome(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Welcome to my website!")
-}
-
-func database(w http.ResponseWriter, r *http.Request) {
-	doSomething()
-}
 func getGraph(w http.ResponseWriter, r *http.Request) {
 	notes := getAllPagesAsNotionNotes()
 	g := buildGraph(notes)
@@ -30,36 +22,15 @@ func getGraph(w http.ResponseWriter, r *http.Request) {
 		panic("fuggg")
 	}
 
-	fmt.Fprintf(w, string(js))
-}
-
-// middleware pattern:
-//
-//	wrap a route call in a chain of middleware functions
-//	route fn called after all middleware fns called
-func logging(f http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		slog.Debug(r.URL.Path)
-		f(w, r)
-	}
-}
-
-func setJSONResponse(f http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		f(w, r)
-	}
+	fmt.Fprintf(w, string(js)) // write to http response writer
 }
 
 func main() {
 	initLogging()
-
-	slog.Info(getEnvConfig().notionApiKey)
-
 	slog.Info("Starting server on port 8080")
-	http.HandleFunc("/", logging(welcome))
-	http.HandleFunc("/database", setJSONResponse(logging(database)))
-	http.HandleFunc("/graph", setJSONResponse(logging(getGraph)))
+
+	// http.HandleFunc("/graph", installMiddleware(getGraph))
+	http.HandleFunc("/graph", installMiddleware(getGraph))
 
 	http.ListenAndServe(":8080", nil)
 }

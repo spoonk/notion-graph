@@ -2,10 +2,8 @@ package main
 
 import (
 	"context"
-	// "fmt"
-	"log/slog"
-
 	"github.com/jomei/notionapi"
+	"log/slog"
 )
 
 type NotionNote struct {
@@ -55,12 +53,6 @@ func getPagesFromDB(databaseIdString string) []notionapi.Page {
 
 	return qr.Results
 }
-
-// wutev
-// func parseProperty(page notionapi.Page, propertyName string, expectedType *notionapi.RelationProperty) {
-// 	prop, ok := page.Properties[propertyName].(*expectedType)
-//
-// }
 
 func parsePageToNotionNote(page notionapi.Page) NotionNote {
 
